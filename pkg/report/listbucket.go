@@ -7,13 +7,16 @@ import (
 )
 
 // ListBucket lists the contents of an s3 bucket.
-func ListBucket(bucketName, awsRegion string) ([]string, error) {
+func (rep *Report) ListBucket() ([]string, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(awsRegion)},
+		Region: aws.String(rep.awsRegion)},
 	)
+	if err != nil {
+		return nil, err
+	}
 	svc := s3.New(sess)
 	params := &s3.ListObjectsInput{
-		Bucket: aws.String(bucketName),
+		Bucket: aws.String(rep.bucketName),
 	}
 	resp, err := svc.ListObjects(params)
 	if err != nil {

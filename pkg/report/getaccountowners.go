@@ -6,8 +6,9 @@ import (
 	"strings"
 )
 
-func GetAccountOwners(csvFileName string) (map[string]string, error) {
-	f, err := os.Open(csvFileName)
+// GetAccountOwners gets account owners
+func (rep *Report) GetAccountOwners() (map[string]string, error) {
+	f, err := os.Open(rep.csvFileName)
 	if err != nil {
 		return nil, err
 	}

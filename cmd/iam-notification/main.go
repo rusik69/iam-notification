@@ -9,18 +9,26 @@ import (
 
 func main() {
 	args := cmd.ParseArgs()
-	files, err := report.ListBucket(args.BucketName, args.AwsRegion)
+	rep, err := report.NewReport(args.BucketName, args.AwsRegion, args.CsvFileName)
 	if err != nil {
 		panic(err)
 	}
-	lastReport := report.GetLastReport(files)
-	if lastReport == "" {
-		panic("no reports found")
+	files, err := rep.ListBucket()
+	if err != nil {
+		panic(err)
 	}
-	accountOwners, err := report.GetAccountOwners(args.CsvFileName)
+	lastReports, err := rep.GetLastReports(files)
+	if err != nil {
+		panic(err)
+	}
+	accountOwners, err := rep.GetAccountOwners()
+	if err != nil {
+		panic(err)
+	}
+	reports, err := rep.GenerateReports(lastReports)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(accountOwners)
-	fmt.Println(lastReport)
+	fmt.Println(lastReports)
 }
